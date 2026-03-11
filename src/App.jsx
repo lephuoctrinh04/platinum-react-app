@@ -1,39 +1,47 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Tasks from "./pages/Tasks";
+import Posts from "./pages/Posts";
+import Contact from "./pages/Contact";
+
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("darkMode");
+    if (savedTheme === "true") {
+      setDarkMode(true);
+      document.body.classList.add("dark");
+    }
+  }, []);
+
+  function toggleTheme() {
+    const newTheme = !darkMode;
+    setDarkMode(newTheme);
+    localStorage.setItem("darkMode", String(newTheme));
+
+    if (newTheme) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }
+
   return (
-    <div className="container">
+    <BrowserRouter>
+      <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
 
-      <h1>Platinum</h1>
-
-      <nav>
-        <a href="#">Trang chủ</a>
-        <a href="#">Dịch vụ</a>
-        <a href="#">Liên hệ</a>
-      </nav>
-
-      <h2>Thiết kế Website Chuyên Nghiệp</h2>
-      <p>Xây dựng giao diện hiện đại, chuẩn responsive.</p>
-
-      <h3>Dịch vụ của chúng tôi</h3>
-
-      <div className="services">
-        <div>
-          <h4>Thiết kế UI</h4>
-          <p>Thiết kế giao diện đẹp, tối ưu trải nghiệm.</p>
-        </div>
-
-        <div>
-          <h4>Frontend</h4>
-          <p>HTML, CSS, React hiện đại.</p>
-        </div>
-
-        <div>
-          <h4>Responsive</h4>
-          <p>Tương thích mobile và desktop.</p>
-        </div>
-      </div>
-
-    </div>
-  )
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/posts" element={<Posts />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
